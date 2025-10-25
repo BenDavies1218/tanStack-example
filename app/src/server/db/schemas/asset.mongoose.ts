@@ -4,8 +4,9 @@ import {
   index,
   modelOptions,
   type Ref,
+  type ReturnModelType,
 } from "@typegoose/typegoose";
-import { Types } from "mongoose";
+import mongoose, { Mongoose, Types } from "mongoose";
 
 /**
  * MongoDB/Typegoose schema for crypto assets
@@ -175,6 +176,8 @@ export class Asset {
 }
 
 // Export the model
-export const AssetModel = getModelForClass(Asset);
+export const AssetModel =
+  (mongoose.models.Asset as ReturnModelType<typeof Asset> | undefined) ??
+  getModelForClass(Asset);
 
 export default AssetModel;

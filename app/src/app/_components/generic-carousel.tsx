@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
  * A flexible carousel wrapper built on shadcn/ui carousel with embla plugins
  */
 
-export interface CustomCarouselProps<T> {
+export interface GenericCarouselProps<T> {
   // Data
   items: T[];
   renderItem: (item: T, index: number) => React.ReactNode;
@@ -71,7 +71,7 @@ export interface CustomCarouselProps<T> {
   onApiReady?: (api: CarouselApi) => void;
 }
 
-export function CustomCarousel<T>({
+export function GenericCarousel<T>({
   items,
   renderItem,
   itemsPerView = 1,
@@ -97,7 +97,7 @@ export function CustomCarousel<T>({
   containScroll = "trimSnaps",
   onSlideChange,
   onApiReady,
-}: CustomCarouselProps<T>) {
+}: GenericCarouselProps<T>) {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);

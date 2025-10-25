@@ -561,7 +561,7 @@ const { data, isLoading, error } =
       {/* Example 5: Error Handling - useEffect for Console Logging */}
       <div className="rounded-lg bg-white/10 p-6">
         <h3 className="mb-4 text-xl font-semibold">
-          Example 5: Error Handling - Console Logging with useEffect
+          Example 5: Error Handling - throwOnError Callback
         </h3>
 
         <div className="mb-4 rounded bg-black/30 p-4 font-mono text-sm">

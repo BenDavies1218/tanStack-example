@@ -35,20 +35,20 @@ export default function UseQueryPage() {
         </div>
 
         {/* Tab Navigation */}
-        <div className="mb-8 flex gap-4">
+        <div className="mb-8 flex cursor-pointer gap-4">
           <button
             onClick={() => setActiveTab("trpc")}
-            className={`rounded-lg px-6 py-3 font-semibold transition-all ${
+            className={`cursor-pointer rounded-lg px-6 py-3 font-semibold transition-all ${
               activeTab === "trpc"
                 ? "bg-blue-600 text-white shadow-lg"
                 : "bg-white/10 text-gray-300 hover:bg-white/20"
             }`}
           >
-            tRPC + useQuery
+            tRPC
           </button>
           <button
             onClick={() => setActiveTab("tanstack")}
-            className={`rounded-lg px-6 py-3 font-semibold transition-all ${
+            className={`cursor-pointer rounded-lg px-6 py-3 font-semibold transition-all ${
               activeTab === "tanstack"
                 ? "bg-purple-600 text-white shadow-lg"
                 : "bg-white/10 text-gray-300 hover:bg-white/20"
@@ -62,9 +62,7 @@ export default function UseQueryPage() {
         <div className="rounded-lg bg-white/5 p-6">
           {activeTab === "trpc" && (
             <div>
-              <h2 className="mb-6 text-3xl font-bold">
-                tRPC with TanStack Query
-              </h2>
+              <h2 className="mb-6 text-3xl font-bold">tRPC useQuery()</h2>
               <p className="mb-6 text-gray-300">
                 tRPC wraps TanStack Query to provide end-to-end type safety.
                 Perfect for fetching data from your backend API.
@@ -75,9 +73,7 @@ export default function UseQueryPage() {
 
           {activeTab === "tanstack" && (
             <div>
-              <h2 className="mb-6 text-3xl font-bold">
-                TanStack Query with Ethers.js
-              </h2>
+              <h2 className="mb-6 text-3xl font-bold">TanStack Query</h2>
               <p className="mb-6 text-gray-300">
                 TanStack Query can wrap any async function - RPC calls, REST
                 APIs, or any other data source. Here we use it with ethers.js

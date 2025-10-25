@@ -60,10 +60,12 @@ interface AssetJSON {
 /**
  * Helper to extract number from MongoDB extended JSON format
  */
-function extractNumber(val: number | { $numberDouble: string } | null | undefined): number | null {
+function extractNumber(
+  val: number | { $numberDouble: string } | null | undefined,
+): number | null {
   if (val === null || val === undefined) return null;
-  if (typeof val === 'number') return val;
-  if (typeof val === 'object' && '$numberDouble' in val) {
+  if (typeof val === "number") return val;
+  if (typeof val === "object" && "$numberDouble" in val) {
     const parsed = parseFloat(val.$numberDouble);
     return isNaN(parsed) ? null : parsed;
   }
@@ -78,15 +80,25 @@ function transformAsset(asset: AssetJSON): NewAsset {
     id: asset.id,
     symbol: asset.symbol,
     name: asset.name,
-    version: asset.__v ?? 0,
+    version: asset.__v,
     currentPrice: extractNumber(asset.currentPrice),
     priceChange24h: extractNumber(asset.priceChange24h),
     priceChangePercentage24h: extractNumber(asset.priceChangePercentage24h),
-    priceChangePercentage24hInCurrency: extractNumber(asset.priceChangePercentage24hInCurrency),
-    priceChangePercentage1hInCurrency: extractNumber(asset.priceChangePercentage1hInCurrency),
-    priceChangePercentage7dInCurrency: extractNumber(asset.priceChangePercentage7dInCurrency),
-    priceChangePercentage30dInCurrency: extractNumber(asset.priceChangePercentage30dInCurrency),
-    priceChangePercentage1yInCurrency: extractNumber(asset.priceChangePercentage1yInCurrency),
+    priceChangePercentage24hInCurrency: extractNumber(
+      asset.priceChangePercentage24hInCurrency,
+    ),
+    priceChangePercentage1hInCurrency: extractNumber(
+      asset.priceChangePercentage1hInCurrency,
+    ),
+    priceChangePercentage7dInCurrency: extractNumber(
+      asset.priceChangePercentage7dInCurrency,
+    ),
+    priceChangePercentage30dInCurrency: extractNumber(
+      asset.priceChangePercentage30dInCurrency,
+    ),
+    priceChangePercentage1yInCurrency: extractNumber(
+      asset.priceChangePercentage1yInCurrency,
+    ),
     high24h: extractNumber(asset.high24h),
     low24h: extractNumber(asset.low24h),
     ath: extractNumber(asset.ath),
@@ -96,9 +108,12 @@ function transformAsset(asset: AssetJSON): NewAsset {
     atlChangePercentage: extractNumber(asset.atlChangePercentage),
     atlDate: asset.atlDate ? new Date(asset.atlDate.$date) : new Date(),
     marketCap: extractNumber(asset.marketCap),
-    marketCapRank: typeof asset.marketCapRank === "number" ? asset.marketCapRank : null,
+    marketCapRank:
+      typeof asset.marketCapRank === "number" ? asset.marketCapRank : null,
     marketCapChange24h: extractNumber(asset.marketCapChange24h),
-    marketCapChangePercentage24h: extractNumber(asset.marketCapChangePercentage24h),
+    marketCapChangePercentage24h: extractNumber(
+      asset.marketCapChangePercentage24h,
+    ),
     fullyDilutedValuation: extractNumber(asset.fullyDilutedValuation),
     totalVolume: extractNumber(asset.totalVolume),
     circulatingSupply: extractNumber(asset.circulatingSupply),
@@ -107,7 +122,9 @@ function transformAsset(asset: AssetJSON): NewAsset {
     roi: asset.roi ?? null,
     sparklineIn7d: asset.sparklineIn7d,
     image: asset.image,
-    lastUpdated: asset.lastUpdated ? new Date(asset.lastUpdated.$date) : new Date(),
+    lastUpdated: asset.lastUpdated
+      ? new Date(asset.lastUpdated.$date)
+      : new Date(),
     createdAt: asset.createdAt ? new Date(asset.createdAt.$date) : new Date(),
     updatedAt: asset.updatedAt ? new Date(asset.updatedAt.$date) : new Date(),
     messariId: asset.messariId,

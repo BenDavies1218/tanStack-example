@@ -15,6 +15,10 @@
     "noUncheckedIndexedAccess": true,
     "checkJs": true,
 
+    /* Decorators */
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
     /* Bundled projects */
     "lib": ["dom", "dom.iterable", "ES2022"],
     "noEmit": true,

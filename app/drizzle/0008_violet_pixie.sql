@@ -1,0 +1,1 @@
+ALTER TABLE "assets" ALTER COLUMN "sparkline_in_7d" DROP NOT NULL;

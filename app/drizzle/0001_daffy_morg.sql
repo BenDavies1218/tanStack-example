@@ -1,0 +1,1 @@
+ALTER TABLE "assets" ALTER COLUMN "market_cap_rank" DROP NOT NULL;

@@ -1,0 +1,289 @@
+{
+  "id": "e5233a02-52a5-4c00-8bdf-c98daf29caec",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.assets": {
+      "name": "assets",
+      "schema": "",
+      "columns": {
+        "_id": {
+          "name": "_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "symbol": {
+          "name": "symbol",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "__v": {
+          "name": "__v",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "current_price": {
+          "name": "current_price",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price_change_24h": {
+          "name": "price_change_24h",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price_change_percentage_24h": {
+          "name": "price_change_percentage_24h",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price_change_percentage_24h_in_currency": {
+          "name": "price_change_percentage_24h_in_currency",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price_change_percentage_1h_in_currency": {
+          "name": "price_change_percentage_1h_in_currency",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price_change_percentage_7d_in_currency": {
+          "name": "price_change_percentage_7d_in_currency",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price_change_percentage_30d_in_currency": {
+          "name": "price_change_percentage_30d_in_currency",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price_change_percentage_1y_in_currency": {
+          "name": "price_change_percentage_1y_in_currency",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "high_24h": {
+          "name": "high_24h",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "low_24h": {
+          "name": "low_24h",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ath": {
+          "name": "ath",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ath_change_percentage": {
+          "name": "ath_change_percentage",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ath_date": {
+          "name": "ath_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "atl": {
+          "name": "atl",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "atl_change_percentage": {
+          "name": "atl_change_percentage",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "atl_date": {
+          "name": "atl_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "market_cap": {
+          "name": "market_cap",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "market_cap_rank": {
+          "name": "market_cap_rank",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "market_cap_change_24h": {
+          "name": "market_cap_change_24h",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "market_cap_change_percentage_24h": {
+          "name": "market_cap_change_percentage_24h",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fully_diluted_valuation": {
+          "name": "fully_diluted_valuation",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_volume": {
+          "name": "total_volume",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "circulating_supply": {
+          "name": "circulating_supply",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_supply": {
+          "name": "total_supply",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "max_supply": {
+          "name": "max_supply",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "roi": {
+          "name": "roi",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sparkline_in_7d": {
+          "name": "sparkline_in_7d",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "messari_id": {
+          "name": "messari_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "messari_category": {
+          "name": "messari_category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "messari_sector": {
+          "name": "messari_sector",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "messari_tags": {
+          "name": "messari_tags",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "classification_ids": {
+          "name": "classification_ids",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "last_updated": {
+          "name": "last_updated",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "assets_id_unique": {
+          "name": "assets_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

@@ -1,0 +1,22 @@
+ALTER TABLE "assets" ALTER COLUMN "current_price" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "price_change_24h" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "price_change_percentage_24h" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "price_change_percentage_24h_in_currency" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "price_change_percentage_1h_in_currency" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "price_change_percentage_7d_in_currency" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "price_change_percentage_30d_in_currency" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "price_change_percentage_1y_in_currency" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "high_24h" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "low_24h" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "ath" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "ath_change_percentage" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "atl" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "atl_change_percentage" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "market_cap" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "market_cap_change_24h" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "market_cap_change_percentage_24h" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "fully_diluted_valuation" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "total_volume" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "circulating_supply" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "total_supply" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "assets" ALTER COLUMN "max_supply" SET DATA TYPE double precision;

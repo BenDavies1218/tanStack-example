@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ethers } from "ethers";
 import type { BlockInfo, NetworkInfo } from "@/types/asset";
 import { api } from "@/trpc/react";
+import { useState } from "react";
 
 // Ethers.js query functions
 const fetchNetworkInfo = async (): Promise<NetworkInfo> => {
@@ -54,6 +55,29 @@ const fetchEthPrice = async (): Promise<number> => {
 
 const TanStackExamples = () => {
   const utils = api.useUtils();
+
+  // State for dynamic query key example
+  const [ethereumAddress, setEthereumAddress] = useState(
+    "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+  );
+
+  // Dynamic Query Key Example: Fetch balance for user-provided address
+  const {
+    data: addressBalance,
+    isLoading: isLoadingAddressBalance,
+    error: addressBalanceError,
+    isFetching: isFetchingAddressBalance,
+  } = useQuery({
+    queryKey: ["address-balance", ethereumAddress], // Query key includes dynamic parameter
+    queryFn: async () => {
+      const provider = new ethers.JsonRpcProvider("https://eth.llamarpc.com");
+      const balance = await provider.getBalance(ethereumAddress);
+      return ethers.formatEther(balance);
+    },
+    enabled: ethers.isAddress(ethereumAddress), // Only fetch if valid address
+    staleTime: 30000, // Cache for 30 seconds
+  });
+
   // Example 1: Query network information using ethers.js
   const {
     data: networkData,
@@ -309,6 +333,144 @@ const TanStackExamples = () => {
           </p>
         </div>
       </div>
+
+      {/* Dynamic Query Key Example */}
+      <div className="rounded-lg border border-cyan-500/20 bg-linear-to-br from-cyan-900/30 to-blue-900/30 p-6">
+        <h3 className="mb-4 text-2xl font-semibold text-cyan-100">
+          Dynamic Query Keys - Address Balance Lookup
+        </h3>
+
+        <div className="mb-4 rounded bg-black/30 p-4 font-mono text-sm">
+          <pre className="overflow-x-auto">
+            {`const [address, setAddress] = useState("0x...");
+
+const { data, isLoading, isFetching } = useQuery({
+  queryKey: ["address-balance", address], // Dynamic key!
+  queryFn: async () => {
+    const provider = new ethers.JsonRpcProvider(url);
+    const balance = await provider.getBalance(address);
+    return ethers.formatEther(balance);
+  },
+  enabled: ethers.isAddress(address), // Conditional fetching
+  staleTime: 30000,
+});`}
+          </pre>
+        </div>
+
+        <div className="mb-4 space-y-2">
+          <label className="block text-sm font-medium text-gray-300">
+            Enter Ethereum Address:
+          </label>
+          <input
+            type="text"
+            value={ethereumAddress}
+            onChange={(e) => setEthereumAddress(e.target.value)}
+            placeholder="0x..."
+            className="w-full rounded bg-white/10 px-4 py-3 font-mono text-sm text-white placeholder-gray-500 focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+          />
+          <div className="flex items-center justify-between text-xs">
+            <span
+              className={
+                ethers.isAddress(ethereumAddress)
+                  ? "text-green-400"
+                  : "text-red-400"
+              }
+            >
+              {ethers.isAddress(ethereumAddress)
+                ? "✓ Valid address"
+                : "✗ Invalid address"}
+            </span>
+            {isFetchingAddressBalance && (
+              <span className="animate-pulse text-yellow-400">Fetching...</span>
+            )}
+          </div>
+        </div>
+
+        {isLoadingAddressBalance && ethers.isAddress(ethereumAddress) && (
+          <div className="text-yellow-400">Loading balance...</div>
+        )}
+
+        {addressBalanceError && (
+          <div className="rounded bg-red-900/50 p-3 text-red-200">
+            Error: {addressBalanceError.message}
+          </div>
+        )}
+
+        {addressBalance && ethers.isAddress(ethereumAddress) && (
+          <div className="space-y-2 rounded border border-cyan-500/30 bg-white/5 p-4">
+            <div className="flex items-center justify-between">
+              <span className="text-gray-400">Balance:</span>
+              <span className="font-mono text-xl font-bold text-cyan-300">
+                {Number(addressBalance).toFixed(4)} ETH
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-gray-500">Address:</span>
+              <span className="font-mono text-gray-400">
+                {ethereumAddress.slice(0, 6)}...{ethereumAddress.slice(-4)}
+              </span>
+            </div>
+          </div>
+        )}
+
+        <div className="mt-4 rounded border border-cyan-500/20 bg-cyan-900/20 p-4">
+          <p className="mb-2 text-xs text-cyan-200">
+            <strong>🔑 Query Key Behavior:</strong>
+          </p>
+          <ul className="list-inside list-disc space-y-1 text-xs text-cyan-200/80">
+            <li>
+              Current query key:{" "}
+              <code className="rounded bg-black/30 px-1">
+                [&quot;address-balance&quot;, &quot;
+                {ethereumAddress.slice(0, 10)}...&quot;]
+              </code>
+            </li>
+            <li>
+              When you change the address, a <strong>new query key</strong> is
+              created
+            </li>
+            <li>Each unique address has its own cache entry</li>
+            <li>
+              The <code className="rounded bg-black/30 px-1">enabled</code>{" "}
+              option prevents fetching for invalid addresses
+            </li>
+            <li>Previous queries are cached for 30 seconds (staleTime)</li>
+          </ul>
+        </div>
+
+        <div className="mt-4 rounded border border-purple-500/20 bg-purple-900/20 p-4">
+          <p className="text-xs text-purple-200">
+            <strong>💡 Try these addresses:</strong>
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            <button
+              onClick={() =>
+                setEthereumAddress("0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045")
+              }
+              className="rounded bg-purple-900/30 px-3 py-1 text-xs transition-colors hover:bg-purple-900/50"
+            >
+              Vitalik.eth
+            </button>
+            <button
+              onClick={() =>
+                setEthereumAddress("0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe")
+              }
+              className="rounded bg-purple-900/30 px-3 py-1 text-xs transition-colors hover:bg-purple-900/50"
+            >
+              Ethereum Foundation
+            </button>
+            <button
+              onClick={() =>
+                setEthereumAddress("0x00000000219ab540356cBB839Cbe05303d7705Fa")
+              }
+              className="rounded bg-purple-900/30 px-3 py-1 text-xs transition-colors hover:bg-purple-900/50"
+            >
+              ETH2 Deposit Contract
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div className="rounded-lg bg-white/10 p-6">
         <h3 className="mb-4 text-xl font-semibold">
           TanStack Query - Basic Query

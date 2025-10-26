@@ -4,12 +4,13 @@
 import { api } from "@/trpc/react";
 import { useState } from "react";
 
+type sortByType = "rank" | "price" | "24hChange" | "7dChange" | "marketCap";
+
+type sortOrderType = "asc" | "desc";
+
 const TrpcExamples = () => {
-  // State for MongoDB sorting
-  const [sortBy, setSortBy] = useState<
-    "rank" | "price" | "24hChange" | "7dChange" | "marketCap"
-  >("rank");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [sortBy, setSortBy] = useState<sortByType>("rank");
+  const [sortOrder, setSortOrder] = useState<sortOrderType>("asc");
 
   // Example 1: Simple query fetching top 5 assets from PostgreSQL
   const {
@@ -51,11 +52,9 @@ const TrpcExamples = () => {
     data: specificAsset,
     isLoading: isLoadingSpecific,
     error: specificError,
-    isPlaceholderData,
   } = api.query.getAdditionalData.useQuery(
     { id: "bitcoin" },
     {
-      enabled: !!mongoData && mongoData.length > 0, // Only run after we have data
       initialData: initialAsset, // Show initial data while loading this is cached
       staleTime: 0, // Ensure data is always considered stale and refetches
     },
@@ -79,6 +78,8 @@ const TrpcExamples = () => {
         return false; // return false to prevent error from causing unhandled runtime error
       },
     });
+
+  console.log("Intentional Error Data:", intentionalErrorData);
 
   return (
     <div className="space-y-8">
@@ -161,15 +162,6 @@ const TrpcExamples = () => {
                 Refetch when window regains focus (default: true)
               </p>
             </div>
-
-            <div className="rounded bg-white/5 p-3">
-              <code className="text-sm text-purple-300">
-                refetchOnReconnect
-              </code>
-              <p className="mt-1 text-xs text-gray-400">
-                Refetch when network reconnects (default: true)
-              </p>
-            </div>
           </div>
 
           {/* Column 2 */}
@@ -203,20 +195,6 @@ const TrpcExamples = () => {
             </div>
 
             <div className="rounded bg-white/5 p-3">
-              <code className="text-sm text-purple-300">queryKey</code>
-              <p className="mt-1 text-xs text-gray-400">
-                Custom query key (tRPC auto-generates)
-              </p>
-            </div>
-
-            <div className="rounded bg-white/5 p-3">
-              <code className="text-sm text-purple-300">queryFn</code>
-              <p className="mt-1 text-xs text-gray-400">
-                Custom query function (tRPC auto-provides)
-              </p>
-            </div>
-
-            <div className="rounded bg-white/5 p-3">
               <code className="text-sm text-purple-300">
                 notifyOnChangeProps
               </code>
@@ -243,6 +221,15 @@ const TrpcExamples = () => {
               <code className="text-sm text-purple-300">meta</code>
               <p className="mt-1 text-xs text-gray-400">
                 Custom metadata for the query
+              </p>
+            </div>
+
+            <div className="rounded bg-white/5 p-3">
+              <code className="text-sm text-purple-300">
+                refetchOnReconnect
+              </code>
+              <p className="mt-1 text-xs text-gray-400">
+                Refetch when network reconnects (default: true)
               </p>
             </div>
           </div>
@@ -325,10 +312,16 @@ const TrpcExamples = () => {
           Example 2: tRPC Query with Input Parameters (MongoDB)
         </h3>
 
-        <div className="mb-4 rounded bg-black/30 p-4 font-mono text-sm">
+        <p>
+          By passing parameters to the query, you can control the sorting
+          behavior. The query key is automatically generated based on the input
+          parameters.
+        </p>
+
+        <div className="my-4 rounded bg-black/30 p-4 font-mono text-sm">
           <pre className="overflow-x-auto">
-            {`const [sortBy, setSortBy] = useState("rank");
-const [sortOrder, setSortOrder] = useState("asc");
+            {`const [sortBy, setSortBy] = useState<sortByType>("rank");
+const [sortOrder, setSortOrder] = useState<sortOrderType>("asc");
 
 const { data, isLoading, error } =
   api.query.getDataMongoDb.useQuery({ sortBy, sortOrder });`}

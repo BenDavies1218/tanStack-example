@@ -26,7 +26,7 @@ export type AssetDTO = {
  */
 export function toAssetDTO(asset: {
   _id?: unknown;
-  id: string;
+  id?: string;
   name: string;
   symbol: string;
   image: string;
@@ -44,7 +44,7 @@ export function toAssetDTO(asset: {
   messariCategory?: string | null;
 }): AssetDTO {
   return {
-    uniqueId: asset.id,
+    uniqueId: asset.id ?? asset._id?.toString() ?? "",
     name: asset.name,
     symbol: asset.symbol,
     category: asset.messariCategory ?? "Unknown",

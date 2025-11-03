@@ -89,37 +89,10 @@ export interface DotsConfig {
 }
 
 /**
- * Autoplay configuration for automatic slide progression
+ * Autoplay configuration for continuous scrolling effect
  */
 export interface AutoplayConfig {
   /** Enable autoplay */
-  enabled?: boolean;
-  /**
-   * Autoplay speed (0-1 scale)
-   * - 1.0 = fastest (delay = limit seconds)
-   * - 0.5 = medium (delay = limit * 2 seconds)
-   * @default 0.5
-   */
-  speed?: number;
-  /**
-   * Time limit in seconds (base time unit)
-   * Combined with speed: delay = (limit / speed) * 1000
-   * @default 3
-   */
-  limit?: number;
-  /** Stop autoplay when user interacts with carousel */
-  stopOnInteraction?: boolean;
-  /** Pause autoplay when mouse enters carousel */
-  stopOnMouseEnter?: boolean;
-  /** Advanced options (overrides speed/limit if provided) */
-  options?: Partial<AutoplayOptionsType>;
-}
-
-/**
- * Auto-scroll configuration for continuous scrolling effect
- */
-export interface AutoScrollConfig {
-  /** Enable auto-scroll */
   enabled?: boolean;
   /**
    * Scroll speed in pixels per frame
@@ -138,6 +111,33 @@ export interface AutoScrollConfig {
   resumeDelay?: number;
   /** Advanced options (overrides speed settings if provided) */
   options?: Partial<AutoScrollOptionsType>;
+}
+
+/**
+ * Auto-scroll configuration for automatic slide progression
+ */
+export interface AutoScrollConfig {
+  /** Enable auto-scroll */
+  enabled?: boolean;
+  /**
+   * AutoScroll speed (0-1 scale)
+   * - 1.0 = fastest (delay = limit seconds)
+   * - 0.5 = medium (delay = limit * 2 seconds)
+   * @default 0.5
+   */
+  speed?: number;
+  /**
+   * Time limit in seconds (base time unit)
+   * Combined with speed: delay = (limit / speed) * 1000
+   * @default 3
+   */
+  limit?: number;
+  /** Stop auto-scroll when user interacts with carousel */
+  stopOnInteraction?: boolean;
+  /** Pause auto-scroll when mouse enters carousel */
+  stopOnMouseEnter?: boolean;
+  /** Advanced options (overrides speed/limit if provided) */
+  options?: Partial<AutoplayOptionsType>;
 }
 
 /**
@@ -173,21 +173,21 @@ export interface WheelGesturesConfig {
  * />
  *
  * @example
- * // Carousel with autoplay
+ * // Banner carousel with autoplay (continuous scrolling)
  * <Carousel<ImageData>
  *   items={images}
  *   renderItem={(image) => <img src={image.url} alt={image.title} />}
- *   autoplay={{ enabled: true, speed: 0.8, limit: 4 }}
+ *   autoplay={{ enabled: true, speed: 1, stopOnMouseEnter: true, resumeDelay: 1000 }}
  *   dots={{ show: true, position: "inside" }}
  * />
  *
  * @example
- * // Banner carousel with auto-scroll
+ * // Carousel with auto-scroll (slide progression)
  * <Carousel<AssetDTO>
  *   items={assets}
  *   renderItem={(asset) => <AssetCard asset={asset} />}
  *   itemsPerView="auto"
- *   autoScroll={{ enabled: true, speed: 1, stopOnMouseEnter: true, resumeDelay: 1000 }}
+ *   autoScroll={{ enabled: true, speed: 0.8, limit: 4 }}
  * />
  */
 export interface CarouselProps<T> {
@@ -251,6 +251,20 @@ export interface CarouselProps<T> {
    */
   orientation?: "horizontal" | "vertical";
 
+  /**
+   * Number of rows for horizontal carousels (stacks items vertically)
+   * @default 1
+   * @example rows={2} - Shows 2 rows of items in horizontal carousel
+   */
+  rows?: number;
+
+  /**
+   * Number of columns for vertical carousels (stacks items horizontally)
+   * @default 1
+   * @example columns={2} - Shows 2 columns of items in vertical carousel
+   */
+  columns?: number;
+
   /** Additional CSS classes for the carousel container */
   className?: string;
 
@@ -297,7 +311,7 @@ export interface CarouselProps<T> {
 
   /**
    * Enable free dragging (scrolls pixel by pixel, not snap to items)
-   * @default false
+   * @default true
    */
   dragFree?: boolean;
 
@@ -315,14 +329,14 @@ export interface CarouselProps<T> {
   // ============================================================================
 
   /**
-   * Autoplay configuration for automatic slide progression
-   * @example autoplay={{ enabled: true, speed: 0.8, limit: 4 }}
+   * Autoplay configuration for continuous scrolling (banner/ticker effect)
+   * @example autoplay={{ enabled: true, speed: 1, stopOnMouseEnter: true, resumeDelay: 1000 }}
    */
   autoplay?: AutoplayConfig;
 
   /**
-   * Auto-scroll configuration for continuous scrolling (banner/ticker effect)
-   * @example autoScroll={{ enabled: true, speed: 1, stopOnMouseEnter: true, resumeDelay: 1000 }}
+   * Auto-scroll configuration for automatic slide progression
+   * @example autoScroll={{ enabled: true, speed: 0.8, limit: 4 }}
    */
   autoScroll?: AutoScrollConfig;
 
@@ -553,6 +567,8 @@ export function Carousel<T>({
   itemsPerView = 1,
   gap = 16,
   orientation = "horizontal",
+  rows = 1,
+  columns = 1,
   className,
   itemClassName,
   navigation,
@@ -560,7 +576,7 @@ export function Carousel<T>({
   loop = false,
   skipSnaps = false,
   align = "start",
-  dragFree = false,
+  dragFree = true,
   containScroll = "trimSnaps",
   autoplay,
   autoScroll,
@@ -594,19 +610,19 @@ export function Carousel<T>({
 
   const {
     enabled: autoplayEnabled = false,
-    speed: autoplaySpeed = 0.5,
-    limit: autoplayLimit = 3,
+    speed: autoplaySpeed = 1,
     stopOnInteraction: autoplayStopOnInteraction = true,
     stopOnMouseEnter: autoplayStopOnMouseEnter = true,
+    resumeDelay: autoplayResumeDelay = 0,
     options: autoplayOptions,
   } = autoplay ?? {};
 
   const {
     enabled: autoScrollEnabled = false,
-    speed: autoScrollSpeed = 1,
+    speed: autoScrollSpeed = 0.5,
+    limit: autoScrollLimit = 3,
     stopOnInteraction: autoScrollStopOnInteraction = true,
     stopOnMouseEnter: autoScrollStopOnMouseEnter = true,
-    resumeDelay: autoScrollResumeDelay = 0,
     options: autoScrollOptions,
   } = autoScroll ?? {};
 
@@ -623,7 +639,10 @@ export function Carousel<T>({
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
   const previousItemCount = useRef(items.length);
-  const scrollPositionBeforeFetch = useRef<{ progress: number; index: number } | null>(null);
+  const scrollPositionBeforeFetch = useRef<{
+    progress: number;
+    index: number;
+  } | null>(null);
 
   // ============================================================================
   // EMPTY STATE
@@ -651,26 +670,26 @@ export function Carousel<T>({
     }
 
     if (autoplayEnabled) {
-      const clampedSpeed = Math.max(0.01, Math.min(1, autoplaySpeed)); // Clamp between 0.01-1
-      const calculatedDelay = (autoplayLimit / clampedSpeed) * 1000;
-
       pluginArray.push(
-        Autoplay({
-          delay: calculatedDelay,
+        AutoScroll({
+          speed: autoplaySpeed,
           stopOnInteraction: autoplayStopOnInteraction,
           stopOnMouseEnter: autoplayStopOnMouseEnter,
+          startDelay: autoplayResumeDelay,
           ...autoplayOptions, // Allow override if needed
         }),
       );
     }
 
     if (autoScrollEnabled) {
+      const clampedSpeed = Math.max(0.01, Math.min(1, autoScrollSpeed)); // Clamp between 0.01-1
+      const calculatedDelay = (autoScrollLimit / clampedSpeed) * 1000;
+
       pluginArray.push(
-        AutoScroll({
-          speed: autoScrollSpeed,
+        Autoplay({
+          delay: calculatedDelay,
           stopOnInteraction: autoScrollStopOnInteraction,
           stopOnMouseEnter: autoScrollStopOnMouseEnter,
-          startDelay: autoScrollResumeDelay,
           ...autoScrollOptions, // Allow override if needed
         }),
       );
@@ -683,15 +702,15 @@ export function Carousel<T>({
     wheelGesturesOptions,
     autoplayEnabled,
     autoplaySpeed,
-    autoplayLimit,
     autoplayStopOnInteraction,
     autoplayStopOnMouseEnter,
+    autoplayResumeDelay,
     autoplayOptions,
     autoScrollEnabled,
     autoScrollSpeed,
+    autoScrollLimit,
     autoScrollStopOnInteraction,
     autoScrollStopOnMouseEnter,
-    autoScrollResumeDelay,
     autoScrollOptions,
     useClassNames,
   ]);
@@ -764,7 +783,10 @@ export function Carousel<T>({
     if (!api || items.length === previousItemCount.current) return;
 
     // Only restore if we have a saved position (meaning items were added via infinite loading)
-    if (items.length > previousItemCount.current && scrollPositionBeforeFetch.current) {
+    if (
+      items.length > previousItemCount.current &&
+      scrollPositionBeforeFetch.current
+    ) {
       const { progress, index } = scrollPositionBeforeFetch.current;
 
       // Use requestAnimationFrame to ensure DOM has updated
@@ -804,6 +826,29 @@ export function Carousel<T>({
   // ============================================================================
   // ITEM LAYOUT CALCULATIONS
   // ============================================================================
+
+  // Determine if we're using multi-row/column layout
+  const isMultiRow = orientation === "horizontal" && rows > 1;
+  const isMultiColumn = orientation === "vertical" && columns > 1;
+  const isMultiLayout = isMultiRow || isMultiColumn;
+  const layoutCount = isMultiRow ? rows : columns;
+
+  // Chunk items into slides for multi-row/column layouts
+  const chunkedItems = useMemo(() => {
+    if (!isMultiLayout) return items.map((item) => [item]);
+
+    const itemsPerSlide =
+      typeof itemsPerView === "number"
+        ? itemsPerView * layoutCount
+        : layoutCount;
+    const chunks: T[][] = [];
+
+    for (let i = 0; i < items.length; i += itemsPerSlide) {
+      chunks.push(items.slice(i, i + itemsPerSlide));
+    }
+
+    return chunks;
+  }, [items, isMultiLayout, itemsPerView, layoutCount]);
 
   const itemBasis =
     typeof itemsPerView === "number" && itemsPerView > 0
@@ -870,8 +915,9 @@ export function Carousel<T>({
 
           {/* Actual data items */}
           {!isLoading &&
-            items.map((item, index) => {
-              const isNearEnd = index === items.length - triggerOffset;
+            chunkedItems.map((chunk, slideIndex) => {
+              const isNearEnd =
+                slideIndex === chunkedItems.length - triggerOffset;
               const shouldShowTrigger =
                 isNearEnd &&
                 hasNextPage &&
@@ -882,16 +928,45 @@ export function Carousel<T>({
               return (
                 <>
                   <CarouselItem
-                    key={index}
+                    key={slideIndex}
                     className={cn(autoItemClassName, itemClassName)}
                     style={itemStyle}
                   >
-                    {renderItem(item, index)}
+                    {isMultiLayout ? (
+                      /* Multi-row/column layout using CSS Grid */
+                      <div
+                        className="grid h-full w-full"
+                        style={{
+                          gridTemplateRows: isMultiRow
+                            ? `repeat(${rows}, 1fr)`
+                            : undefined,
+                          gridTemplateColumns: isMultiColumn
+                            ? `repeat(${columns}, 1fr)`
+                            : isMultiRow && typeof itemsPerView === "number"
+                              ? `repeat(${itemsPerView}, 1fr)`
+                              : undefined,
+                          gap: `${gap}px`,
+                        }}
+                      >
+                        {chunk.map((item, itemIndex) => {
+                          const originalIndex =
+                            slideIndex * chunk.length + itemIndex;
+                          return (
+                            <div key={itemIndex} className="h-full w-full">
+                              {renderItem(item, originalIndex)}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      /* Single item per slide */
+                      renderItem(chunk[0]!, slideIndex)
+                    )}
                   </CarouselItem>
                   {/* IntersectionObserver trigger item */}
                   {shouldShowTrigger && (
                     <CarouselItem
-                      key={`trigger-${index}`}
+                      key={`trigger-${slideIndex}`}
                       className="w-0 shrink-0 p-0"
                     >
                       <IntersectionObserver

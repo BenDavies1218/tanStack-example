@@ -1,7 +1,7 @@
 "use client";
 
 import { api } from "@/trpc/react";
-import { Carousel } from "@/app/_components/generic-carousel";
+import { Carousel } from "@/app/_components/Generics/generic-carousel";
 import { toast } from "sonner";
 import type { AssetDTO } from "@/types/asset";
 import { useMemo } from "react";
@@ -53,25 +53,32 @@ export default function SandboxCarouselExample() {
   // DATA FETCHING
   // ==========================================================================
 
-  const { data, isLoading, isError, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    api.infinite.getInfiniteDataMongoDB.useInfiniteQuery(
-      {
-        limit: state.dataLimit,
-        sortBy: "rank",
-        sortOrder: "asc",
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = api.infinite.getInfiniteDataMongoDB.useInfiniteQuery(
+    {
+      limit: state.dataLimit,
+      sortBy: "rank",
+      sortOrder: "asc",
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+      throwOnError: () => {
+        toast.error("Failed to fetch carousel data", {
+          description: "An error occurred while fetching carousel data",
+        });
+        return false;
       },
-      {
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-        throwOnError: () => {
-          toast.error("Failed to fetch carousel data", {
-            description: "An error occurred while fetching carousel data",
-          });
-          return false;
-        },
-        retry: false,
-        staleTime: 5 * 60 * 1000,
-      },
-    );
+      retry: false,
+      staleTime: 5 * 60 * 1000,
+    },
+  );
 
   // ==========================================================================
   // DATA TRANSFORMATION

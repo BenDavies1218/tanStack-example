@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { api } from "@/trpc/react";
-import { Carousel } from "@/app/_components/generic-carousel";
+import { Carousel } from "@/app/_components/Generics/generic-carousel";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import type { AssetDTO } from "@/types/asset";
-import type { CarouselApi } from "@/app/_components/generic-carousel";
+import type { CarouselApi } from "@/app/_components/Generics/generic-carousel";
 
 /**
  * ╔═══════════════════════════════════════════════════════════════════════════╗
@@ -245,9 +245,7 @@ export default function AutoplayCarouselExample() {
         <div className="mb-4 grid gap-4 md:grid-cols-3">
           {/* Autoplay Speed (0-1) */}
           <div className="space-y-2">
-            <Label htmlFor="speed">
-              Autoplay Speed: {speed.toFixed(2)}
-            </Label>
+            <Label htmlFor="speed">Autoplay Speed: {speed.toFixed(2)}</Label>
             <input
               id="speed"
               type="range"
@@ -256,7 +254,7 @@ export default function AutoplayCarouselExample() {
               step="0.1"
               value={speed}
               onChange={(e) => setSpeed(Number(e.target.value))}
-              className="w-full accent-primary"
+              className="accent-primary w-full"
             />
             <div className="flex justify-between text-xs text-gray-400">
               <span>Slow (0.1)</span>

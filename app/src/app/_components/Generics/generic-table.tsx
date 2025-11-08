@@ -1,7 +1,7 @@
 "use client";
 
 import { type ReactNode } from "react";
-import { IntersectionObserver } from "@/app/_components/shared/IntersectionObserver";
+import { IntersectionObserver } from "@/app/_components/Generics/IntersectionObserver";
 
 /**
  * ╔═══════════════════════════════════════════════════════════════════════════╗

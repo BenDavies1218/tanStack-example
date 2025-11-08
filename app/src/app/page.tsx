@@ -42,31 +42,37 @@ export default function Home() {
 
   const components = [
     {
-      title: "Paginated Tables",
-      href: "/assets/paginated/table",
-      description: "Data table with pagination and search and filtering",
+      title: "Data Tables",
+      href: "/components/data-tables",
+      description: "Data table with cell based rendering.",
+      icon: "📋",
+    },
+    {
+      title: "Carousels",
+      href: "/components/carousels",
+      description:
+        "Carousel components with paginated data fetching, filtering and sorting",
       icon: "🐘",
     },
     {
-      title: "Paginated Carousels",
-      href: "/assets/paginated/carousel",
-      description:
-        "Carousel component with paginated data fetching, filtering and sorting",
-      icon: "🐘",
-    },
-    {
-      title: "Infinite Scrolling Tables",
-      href: "/assets/infinite/table",
-      description:
-        "Data table with inifinite scrolling and virtualized rows, filtering and sorting",
+      title: "Tables",
+      href: "/components/tables",
+      description: "Custom Tables with row based rendering.",
       icon: "🍃",
     },
     {
-      title: "Infinite Scrolling Carousels",
-      href: "/assets/infinite/carousel",
+      title: "Charts",
+      href: "/components/charts",
       description:
-        "Carousel component with infinite scrolling and virtualized rows, filtering and sorting",
-      icon: "🍃",
+        "Chart components with a variety of chart types and customizations",
+      icon: "📊",
+    },
+    {
+      title: "Graphs",
+      href: "/components/graphs",
+      description:
+        "Graph components with a variety of graph types and customizations",
+      icon: "🕸️",
     },
   ];
 

@@ -15,7 +15,7 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel";
-import { IntersectionObserver } from "@/app/_components/shared/IntersectionObserver";
+import { IntersectionObserver } from "@/app/_components/Generics/IntersectionObserver";
 import { cn } from "@/lib/utils";
 
 /**

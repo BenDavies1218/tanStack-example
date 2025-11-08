@@ -1,7 +1,7 @@
 "use client";
 
 import { api } from "@/trpc/react";
-import { Carousel } from "@/app/_components/generic-carousel";
+import { Carousel } from "@/app/_components/Generics/generic-carousel";
 import { toast } from "sonner";
 import type { AssetDTO } from "@/types/asset";
 

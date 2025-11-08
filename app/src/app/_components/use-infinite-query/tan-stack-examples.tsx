@@ -2,7 +2,7 @@
 
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { IntersectionObserver } from "@/app/_components/shared/IntersectionObserver";
+import { IntersectionObserver } from "@/app/_components/Generics/IntersectionObserver";
 
 interface Post {
   id: number;
@@ -183,7 +183,7 @@ if (hasNextPage) {
         )}
 
         {/* Posts List */}
-        <div className="space-y-3">
+        <div className="h-[800px] space-y-3 overflow-scroll">
           {allPosts.map((post, index) => (
             <div
               key={`${post.id}-${index}`}

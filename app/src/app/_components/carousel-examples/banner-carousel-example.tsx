@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { api } from "@/trpc/react";
-import { Carousel } from "@/app/_components/generic-carousel";
+import { Carousel } from "@/app/_components/Generics/generic-carousel";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import type { AssetDTO } from "@/types/asset";
@@ -330,9 +330,7 @@ export default function BannerCarouselExample() {
             <span className="text-lg">⏱️</span>
             <div>
               <strong className="text-white">Resume Delay:</strong> Use{" "}
-              <code className="rounded bg-black/30 px-2 py-1">
-                resumeDelay
-              </code>{" "}
+              <code className="rounded bg-black/30 px-2 py-1">resumeDelay</code>{" "}
               in the autoScroll config to set a delay (in milliseconds) before
               resuming scroll after mouse leaves. Perfect for giving users time
               to finish reading.

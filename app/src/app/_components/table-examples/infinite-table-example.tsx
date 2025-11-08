@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from "react";
 import { api } from "@/trpc/react";
-import { Table } from "@/app/_components/generic-table";
+import { Table } from "@/app/_components/Generics/generic-table";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {

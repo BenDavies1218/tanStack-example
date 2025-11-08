@@ -3,7 +3,7 @@
 
 import { api } from "@/trpc/react";
 import { useState, useEffect } from "react";
-import { IntersectionObserver } from "@/app/_components/shared/IntersectionObserver";
+import { IntersectionObserver } from "@/app/_components/Generics/IntersectionObserver";
 import type { AssetDTO } from "@/types/asset";
 
 const TrpcExamples = () => {
@@ -328,7 +328,7 @@ query.fetchNextPage();`}
         )}
 
         {/* Asset List */}
-        <div className="space-y-2">
+        <div className="h-[800px] space-y-2 overflow-scroll">
           {allItems.map((asset: AssetDTO, index: number) => (
             <div
               key={`${asset.uniqueId}-${index}`}
@@ -372,21 +372,21 @@ query.fetchNextPage();`}
               </div>
             </div>
           ))}
-        </div>
 
-        {/* Intersection Observer for Auto-loading */}
-        {activeQuery.hasNextPage && !activeQuery.isFetchingNextPage && (
-          <IntersectionObserver
-            onIntersect={handleLoadMore}
-            enabled={!activeQuery.isFetchingNextPage}
-            rootMargin="200px"
-            className="mt-4 py-4 text-center"
-          >
-            <div className="rounded bg-cyan-900/30 p-4 text-cyan-200">
-              <div className="text-sm">Scroll down to load more...</div>
-            </div>
-          </IntersectionObserver>
-        )}
+          {/* Intersection Observer for Auto-loading */}
+          {activeQuery.hasNextPage && !activeQuery.isFetchingNextPage && (
+            <IntersectionObserver
+              onIntersect={handleLoadMore}
+              enabled={!activeQuery.isFetchingNextPage}
+              rootMargin="200px"
+              className="mt-4 py-4 text-center"
+            >
+              <div className="rounded bg-cyan-900/30 p-4 text-cyan-200">
+                <div className="text-sm">Scroll down to load more...</div>
+              </div>
+            </IntersectionObserver>
+          )}
+        </div>
 
         {/* Loading Next Page */}
         {activeQuery.isFetchingNextPage && (

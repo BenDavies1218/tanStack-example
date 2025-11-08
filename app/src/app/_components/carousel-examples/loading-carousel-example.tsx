@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Carousel } from "@/app/_components/generic-carousel";
+import { Carousel } from "@/app/_components/Generics/generic-carousel";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -227,8 +227,8 @@ export default function LoadingCarouselExample() {
         <h2 className="mb-2 text-xl font-semibold">Loading States Example</h2>
         <p className="text-sm text-gray-400">
           This example demonstrates how the carousel handles loading and empty
-          states. Configure the settings below and click "Load Data" to
-          simulate an API call with skeleton loaders.
+          states. Configure the settings below and click "Load Data" to simulate
+          an API call with skeleton loaders.
         </p>
       </div>
 

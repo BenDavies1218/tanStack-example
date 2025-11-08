@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { api } from "@/trpc/react";
-import { Carousel } from "@/app/_components/generic-carousel";
+import { Carousel } from "@/app/_components/Generics/generic-carousel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

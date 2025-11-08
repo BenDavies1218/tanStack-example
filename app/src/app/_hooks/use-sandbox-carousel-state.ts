@@ -20,8 +20,8 @@ export interface SandboxCarouselState {
   autoPlayResumeDelay: number; // Delay in ms (0-3000)
 
   autoScroll: boolean; // Slide progression
-  autoScrollSpeed: number; // Speed multiplier (0.1-1.0)
-  autoScrollLimit: number; // Time limit in seconds (1-10)
+  autoScrollInterval: number; // Interval between slides in milliseconds (1000-10000)
+  autoScrollSpeed: number; // Scroll animation duration in milliseconds (100-1000)
   autoScrollStopOnMouseEnter: boolean;
 
   // Layout & Dimensions
@@ -53,8 +53,8 @@ export const DEFAULT_SANDBOX_STATE: SandboxCarouselState = {
   autoPlayStopOnMouseEnter: true,
   autoPlayResumeDelay: 0,
   autoScroll: false,
-  autoScrollSpeed: 0.5,
-  autoScrollLimit: 3,
+  autoScrollInterval: 3000, // 3 seconds
+  autoScrollSpeed: 300, // 300ms animation
   autoScrollStopOnMouseEnter: true,
   maxWidth: 1200,
   paddingY: 24,
@@ -104,11 +104,11 @@ export function useSandboxCarouselState() {
   const [autoScroll, setAutoScroll] = useState(
     DEFAULT_SANDBOX_STATE.autoScroll,
   );
+  const [autoScrollInterval, setAutoScrollInterval] = useState(
+    DEFAULT_SANDBOX_STATE.autoScrollInterval,
+  );
   const [autoScrollSpeed, setAutoScrollSpeed] = useState(
     DEFAULT_SANDBOX_STATE.autoScrollSpeed,
-  );
-  const [autoScrollLimit, setAutoScrollLimit] = useState(
-    DEFAULT_SANDBOX_STATE.autoScrollLimit,
   );
   const [autoScrollStopOnMouseEnter, setAutoScrollStopOnMouseEnter] = useState(
     DEFAULT_SANDBOX_STATE.autoScrollStopOnMouseEnter,
@@ -130,8 +130,8 @@ export function useSandboxCarouselState() {
     setAutoPlayStopOnMouseEnter(DEFAULT_SANDBOX_STATE.autoPlayStopOnMouseEnter);
     setAutoPlayResumeDelay(DEFAULT_SANDBOX_STATE.autoPlayResumeDelay);
     setAutoScroll(DEFAULT_SANDBOX_STATE.autoScroll);
+    setAutoScrollInterval(DEFAULT_SANDBOX_STATE.autoScrollInterval);
     setAutoScrollSpeed(DEFAULT_SANDBOX_STATE.autoScrollSpeed);
-    setAutoScrollLimit(DEFAULT_SANDBOX_STATE.autoScrollLimit);
     setAutoScrollStopOnMouseEnter(
       DEFAULT_SANDBOX_STATE.autoScrollStopOnMouseEnter,
     );
@@ -158,8 +158,8 @@ export function useSandboxCarouselState() {
     autoPlayStopOnMouseEnter,
     autoPlayResumeDelay,
     autoScroll,
+    autoScrollInterval,
     autoScrollSpeed,
-    autoScrollLimit,
     autoScrollStopOnMouseEnter,
     maxWidth,
     paddingY,
@@ -184,8 +184,8 @@ export function useSandboxCarouselState() {
     setAutoPlayStopOnMouseEnter,
     setAutoPlayResumeDelay,
     setAutoScroll,
+    setAutoScrollInterval,
     setAutoScrollSpeed,
-    setAutoScrollLimit,
     setAutoScrollStopOnMouseEnter,
     setMaxWidth,
     setPaddingY,

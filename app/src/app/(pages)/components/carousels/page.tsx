@@ -1,33 +1,19 @@
 import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
 import BasicCarouselExample from "@/app/_components/carousel-examples/basic-carousel-example";
-import AutoplayCarouselExample from "@/app/_components/carousel-examples/autoplay-carousel-example";
-import LoadingCarouselExample from "@/app/_components/carousel-examples/loading-carousel-example";
+import AutoScrollCarouselExample from "@/app/_components/carousel-examples/autoscroll-carousel-example";
 import InfiniteCarouselExample from "@/app/_components/carousel-examples/infinite-carousel-example";
-import BannerCarouselExample from "@/app/_components/carousel-examples/banner-carousel-example";
+import AutoPlayCarouselExample from "@/app/_components/carousel-examples/autoplay-carousel-example";
 import SandboxCarouselExample from "@/app/_components/carousel-examples/sandbox-carousel-example";
+import CarouselPropsTable from "@/app/_components/carousel-examples/carousel-props-table";
 
-/**
- * ╔═══════════════════════════════════════════════════════════════════════════╗
- * ║                       CAROUSEL EXAMPLES PAGE                              ║
- * ╠═══════════════════════════════════════════════════════════════════════════╣
- * ║                                                                           ║
- * ║  This page showcases various carousel implementations using the           ║
- * ║  generic Carousel component with TanStack Query integration.              ║
- * ║                                                                           ║
- * ║  EXAMPLES INCLUDED:                                                       ║
- * ║  1. Basic Carousel - Simple carousel with crypto assets                   ║
- * ║  2. Autoplay Carousel - Auto-advancing with play/pause controls           ║
- * ║  3. Banner/Ticker - Continuous scrolling banner effect                    ║
- * ║  4. Loading States - Skeleton loaders and empty states                    ║
- * ║  5. Infinite Carousel - useInfiniteQuery with load more                   ║
- * ║                                                                           ║
- * ║  ROUTE: /assets/infinite/carousel                                         ║
- * ║                                                                           ║
- * ╚═══════════════════════════════════════════════════════════════════════════╝
- */
-
+enum TabValues {
+  BASIC = "basic",
+  AUTO_PLAY = "autoPlay",
+  AUTO_SCROLL = "autoScroll",
+  INFINITE = "infinite",
+  SANDBOX = "sandbox",
+}
 export default function CarouselExamplesPage() {
   return (
     <div className="container mx-auto py-10">
@@ -47,46 +33,45 @@ export default function CarouselExamplesPage() {
       </div>
 
       {/* Carousel Examples Tabs */}
-      <Tabs defaultValue="basic" className="w-full">
-        <TabsList className="grid w-full grid-cols-6">
-          <TabsTrigger value="basic">Basic</TabsTrigger>
-          <TabsTrigger value="autoplay">Autoplay</TabsTrigger>
-          <TabsTrigger value="banner">Banner</TabsTrigger>
-          <TabsTrigger value="loading">Loading</TabsTrigger>
-          <TabsTrigger value="infinite">Infinite</TabsTrigger>
-          <TabsTrigger value="sandbox">Sandbox</TabsTrigger>
+      <Tabs defaultValue={TabValues.BASIC} className="w-full">
+        <TabsList className="flex w-full justify-around">
+          <TabsTrigger value={TabValues.BASIC}>Basic</TabsTrigger>
+          <TabsTrigger value={TabValues.AUTO_PLAY}>Autoplay</TabsTrigger>
+          <TabsTrigger value={TabValues.AUTO_SCROLL}>AutoScroll</TabsTrigger>
+          <TabsTrigger value={TabValues.INFINITE}>Infinite</TabsTrigger>
+          <TabsTrigger value={TabValues.SANDBOX}>Sandbox</TabsTrigger>
         </TabsList>
 
         {/* Basic Carousel Tab */}
-        <TabsContent value="basic" className="mt-6">
+        <TabsContent value={TabValues.BASIC} className="mt-6">
           <BasicCarouselExample />
-        </TabsContent>
-
-        {/* Sandbox Carousel Tab */}
-        <TabsContent value="sandbox" className="mt-6">
-          <div className="mx-auto w-full max-w-[1800px]">
-            <SandboxCarouselExample />
+          <div className="mt-4 text-center text-sm text-gray-400">
+            Example of a basic carousel displaying various crypto assets.
           </div>
+
+          <CarouselPropsTable />
         </TabsContent>
 
         {/* Autoplay Carousel Tab */}
-        <TabsContent value="autoplay" className="mt-6">
-          <AutoplayCarouselExample />
+        <TabsContent value={TabValues.AUTO_SCROLL} className="mt-6">
+          <AutoScrollCarouselExample />
         </TabsContent>
 
-        {/* Banner/Ticker Carousel Tab */}
-        <TabsContent value="banner" className="mt-6">
-          <BannerCarouselExample />
-        </TabsContent>
-
-        {/* Loading States Tab */}
-        <TabsContent value="loading" className="mt-6">
-          <LoadingCarouselExample />
+        {/* Auto Play Carousel Tab */}
+        <TabsContent value={TabValues.AUTO_PLAY} className="mt-6">
+          <AutoPlayCarouselExample />
         </TabsContent>
 
         {/* Infinite Carousel Tab */}
-        <TabsContent value="infinite" className="mt-6">
+        <TabsContent value={TabValues.INFINITE} className="mt-6">
           <InfiniteCarouselExample />
+        </TabsContent>
+
+        {/* Sandbox Carousel Tab */}
+        <TabsContent value={TabValues.SANDBOX} className="mt-6">
+          <div className="mx-auto w-full max-w-[1800px]">
+            <SandboxCarouselExample />
+          </div>
         </TabsContent>
       </Tabs>
     </div>

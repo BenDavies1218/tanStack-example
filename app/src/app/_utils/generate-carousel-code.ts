@@ -28,8 +28,8 @@ export function generateCarouselCode(state: SandboxCarouselState): string {
   const autoScrollConfig = state.autoScroll
     ? `autoScroll={{
           enabled: true,
+          interval: ${state.autoScrollInterval},
           speed: ${state.autoScrollSpeed},
-          limit: ${state.autoScrollLimit},
           stopOnInteraction: false,
           stopOnMouseEnter: ${state.autoScrollStopOnMouseEnter},
         }}`
@@ -180,8 +180,8 @@ export default function CustomCarousel() {
  * Auto Scroll (Slide Progression): ${state.autoScroll ? "ENABLED" : "DISABLED"}
  ${
    state.autoScroll
-     ? `* - Speed: ${state.autoScrollSpeed}x
- * - Interval: ${state.autoScrollLimit}s
+     ? `* - Interval: ${(state.autoScrollInterval / 1000).toFixed(1)}s (wait time between slides)
+ * - Speed: ${state.autoScrollSpeed}ms (animation duration)
  * - Stop on Mouse Enter: ${state.autoScrollStopOnMouseEnter}`
      : ""
  }

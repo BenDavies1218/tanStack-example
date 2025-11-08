@@ -120,23 +120,25 @@ export interface AutoScrollConfig {
   /** Enable auto-scroll */
   enabled?: boolean;
   /**
-   * AutoScroll speed (0-1 scale)
-   * - 1.0 = fastest (delay = limit seconds)
-   * - 0.5 = medium (delay = limit * 2 seconds)
-   * @default 0.5
+   * Interval between auto-scrolls in milliseconds
+   * This is the time the carousel waits before advancing to the next slide
+   * @default 3000 (3 seconds)
+   * @example interval={5000} - Wait 5 seconds between slides
+   */
+  interval?: number;
+  /**
+   * Duration of the scroll animation in milliseconds
+   * This controls how fast the scroll transition happens
+   * Note: This is passed to Embla's animation duration, not the Autoplay plugin
+   * @default undefined (uses Embla's default animation duration)
+   * @example speed={300} - 300ms scroll animation
    */
   speed?: number;
-  /**
-   * Time limit in seconds (base time unit)
-   * Combined with speed: delay = (limit / speed) * 1000
-   * @default 3
-   */
-  limit?: number;
   /** Stop auto-scroll when user interacts with carousel */
   stopOnInteraction?: boolean;
   /** Pause auto-scroll when mouse enters carousel */
   stopOnMouseEnter?: boolean;
-  /** Advanced options (overrides speed/limit if provided) */
+  /** Advanced options (overrides interval if 'delay' is provided) */
   options?: Partial<AutoplayOptionsType>;
 }
 
@@ -187,7 +189,7 @@ export interface WheelGesturesConfig {
  *   items={assets}
  *   renderItem={(asset) => <AssetCard asset={asset} />}
  *   itemsPerView="auto"
- *   autoScroll={{ enabled: true, speed: 0.8, limit: 4 }}
+ *   autoScroll={{ enabled: true, interval: 3000, speed: 300 }}
  * />
  */
 export interface CarouselProps<T> {
@@ -233,7 +235,7 @@ export interface CarouselProps<T> {
 
   /**
    * Number of items visible at once, or "auto" for responsive sizing
-   * @default 1
+   * @default "auto"
    * @example itemsPerView={3} - Show 3 items at once
    * @example itemsPerView="auto" - Let items determine their own width
    */
@@ -336,7 +338,7 @@ export interface CarouselProps<T> {
 
   /**
    * Auto-scroll configuration for automatic slide progression
-   * @example autoScroll={{ enabled: true, speed: 0.8, limit: 4 }}
+   * @example autoScroll={{ enabled: true, interval: 3000, speed: 300 }}
    */
   autoScroll?: AutoScrollConfig;
 
@@ -564,7 +566,7 @@ export function Carousel<T>({
   renderEmptyItem,
   isLoading = false,
   loadingCount = 4,
-  itemsPerView = 1,
+  itemsPerView = "auto",
   gap = 16,
   orientation = "horizontal",
   rows = 1,
@@ -619,8 +621,8 @@ export function Carousel<T>({
 
   const {
     enabled: autoScrollEnabled = false,
-    speed: autoScrollSpeed = 0.5,
-    limit: autoScrollLimit = 3,
+    interval: autoScrollInterval = 3000,
+    speed: autoScrollSpeed,
     stopOnInteraction: autoScrollStopOnInteraction = true,
     stopOnMouseEnter: autoScrollStopOnMouseEnter = true,
     options: autoScrollOptions,
@@ -639,10 +641,6 @@ export function Carousel<T>({
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
   const previousItemCount = useRef(items.length);
-  const scrollPositionBeforeFetch = useRef<{
-    progress: number;
-    index: number;
-  } | null>(null);
 
   // ============================================================================
   // EMPTY STATE
@@ -682,15 +680,12 @@ export function Carousel<T>({
     }
 
     if (autoScrollEnabled) {
-      const clampedSpeed = Math.max(0.01, Math.min(1, autoScrollSpeed)); // Clamp between 0.01-1
-      const calculatedDelay = (autoScrollLimit / clampedSpeed) * 1000;
-
       pluginArray.push(
         Autoplay({
-          delay: calculatedDelay,
+          delay: autoScrollInterval,
           stopOnInteraction: autoScrollStopOnInteraction,
           stopOnMouseEnter: autoScrollStopOnMouseEnter,
-          ...autoScrollOptions, // Allow override if needed
+          ...autoScrollOptions, // Allow override if needed (e.g., custom delay)
         }),
       );
     }
@@ -707,8 +702,7 @@ export function Carousel<T>({
     autoplayResumeDelay,
     autoplayOptions,
     autoScrollEnabled,
-    autoScrollSpeed,
-    autoScrollLimit,
+    autoScrollInterval,
     autoScrollStopOnInteraction,
     autoScrollStopOnMouseEnter,
     autoScrollOptions,
@@ -727,8 +721,21 @@ export function Carousel<T>({
       dragFree,
       containScroll,
       slidesToScroll: typeof itemsPerView === "number" ? itemsPerView : 1,
+      // Set scroll animation duration if autoScroll is enabled with a speed value
+      ...(autoScrollEnabled && autoScrollSpeed !== undefined
+        ? { duration: autoScrollSpeed }
+        : {}),
     }),
-    [align, loop, skipSnaps, dragFree, containScroll, itemsPerView],
+    [
+      align,
+      loop,
+      skipSnaps,
+      dragFree,
+      containScroll,
+      itemsPerView,
+      autoScrollEnabled,
+      autoScrollSpeed,
+    ],
   );
 
   // ============================================================================
@@ -760,59 +767,49 @@ export function Carousel<T>({
   // PRESERVE SCROLL POSITION DURING INFINITE LOADING
   // ============================================================================
 
-  // Capture scroll position when fetch starts
+  // Capture scroll position when items change (for infinite loading)
   useEffect(() => {
     if (!api) return;
 
-    if (isFetchingNextPage && !scrollPositionBeforeFetch.current) {
-      // Store current position before new items are added
-      scrollPositionBeforeFetch.current = {
-        progress: api.scrollProgress(),
-        index: api.selectedScrollSnap(),
-      };
+    // Only proceed if items were added (not removed or initial load)
+    if (items.length <= previousItemCount.current) {
+      previousItemCount.current = items.length;
+      return;
     }
 
-    if (!isFetchingNextPage && scrollPositionBeforeFetch.current) {
-      // Clear stored position after fetch completes
-      scrollPositionBeforeFetch.current = null;
+    // Capture current scroll position BEFORE React re-renders
+    const container = api.containerNode();
+    const scrollContainer = api.rootNode();
+
+    if (!container || !scrollContainer) {
+      previousItemCount.current = items.length;
+      return;
     }
-  }, [api, isFetchingNextPage]);
 
-  // Restore scroll position when items are added
-  useEffect(() => {
-    if (!api || items.length === previousItemCount.current) return;
+    // Store the current absolute scroll offset in pixels
+    const currentScrollLeft = scrollContainer.scrollLeft;
+    const currentScrollTop = scrollContainer.scrollTop;
 
-    // Only restore if we have a saved position (meaning items were added via infinite loading)
-    if (
-      items.length > previousItemCount.current &&
-      scrollPositionBeforeFetch.current
-    ) {
-      const { progress, index } = scrollPositionBeforeFetch.current;
-
-      // Use requestAnimationFrame to ensure DOM has updated
+    // Wait for DOM to update with new items
+    requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         if (!api) return;
 
-        if (dragFree) {
-          // For dragFree mode, maintain scroll progress
-          // This keeps the viewport in the same visual position
-          const container = api.containerNode();
-          if (container) {
-            const maxScroll = container.scrollWidth - container.offsetWidth;
-            container.scrollLeft = progress * maxScroll;
-          }
-        } else {
-          // For snap mode, stay on the same slide index
-          api.scrollTo(index, false);
-        }
-
-        // Reinitialize to recalculate positions
+        // Reinitialize Embla to recalculate with new items
         api.reInit();
+
+        // Restore the exact pixel position
+        // This prevents any visible jump because we're setting it before paint
+        if (orientation === "horizontal") {
+          scrollContainer.scrollLeft = currentScrollLeft;
+        } else {
+          scrollContainer.scrollTop = currentScrollTop;
+        }
       });
-    }
+    });
 
     previousItemCount.current = items.length;
-  }, [api, items.length, dragFree]);
+  }, [api, items.length, orientation]);
 
   // ============================================================================
   // INFINITE LOADING HANDLER

@@ -4,6 +4,10 @@ import { api } from "@/trpc/react";
 import { Carousel } from "@/app/_components/Generics/generic-carousel";
 import { toast } from "sonner";
 import type { AssetDTO } from "@/types/asset";
+import {
+  BasicCarouselItem,
+  BasicCarouselItemLoading,
+} from "./items/basic";
 
 /**
  * ╔═══════════════════════════════════════════════════════════════════════════╗
@@ -34,97 +38,6 @@ import type { AssetDTO } from "@/types/asset";
 // ============================================================================
 // Render Functions
 // ============================================================================
-
-const renderItem = (asset: AssetDTO) => (
-  <div className="flex h-full flex-col rounded-lg border border-white/10 bg-white/5 p-6 transition-all hover:border-white/20 hover:bg-white/10">
-    {/* Asset Header */}
-    <div className="mb-4 flex items-center gap-4">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={asset.image}
-        alt={asset.name}
-        className="h-12 w-12 rounded-full"
-      />
-      <div className="flex-1 overflow-hidden">
-        <h3 className="truncate text-lg font-semibold">{asset.name}</h3>
-        <p className="text-sm text-gray-400">
-          {asset.symbol.toUpperCase()} • Rank #{asset.rank}
-        </p>
-      </div>
-    </div>
-
-    {/* Price Info */}
-    <div className="mb-4 space-y-2">
-      <div className="flex items-baseline justify-between">
-        <span className="text-2xl font-bold">
-          ${asset.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-        </span>
-        <span
-          className={`text-sm font-medium ${
-            asset["24hChange"] >= 0 ? "text-green-400" : "text-red-400"
-          }`}
-        >
-          {asset["24hChange"] >= 0 ? "+" : ""}
-          {asset["24hChange"].toFixed(2)}%
-        </span>
-      </div>
-    </div>
-
-    {/* Stats */}
-    <div className="mt-auto space-y-2 border-t border-white/10 pt-4">
-      <div className="flex justify-between text-sm">
-        <span className="text-gray-400">Market Cap</span>
-        <span className="font-medium">
-          ${(asset.marketCap / 1e9).toFixed(2)}B
-        </span>
-      </div>
-      <div className="flex justify-between text-sm">
-        <span className="text-gray-400">Volume (24h)</span>
-        <span className="font-medium">
-          ${(asset.totalVolume / 1e9).toFixed(2)}B
-        </span>
-      </div>
-      <div className="flex justify-between text-sm">
-        <span className="text-gray-400">Category</span>
-        <span className="font-medium">{asset.category}</span>
-      </div>
-    </div>
-  </div>
-);
-
-const renderLoadingItem = () => (
-  <div className="flex h-full flex-col rounded-lg border border-white/10 bg-white/5 p-6">
-    {/* Header Skeleton */}
-    <div className="mb-4 flex items-center gap-4">
-      <div className="h-12 w-12 animate-pulse rounded-full bg-white/10" />
-      <div className="flex-1 space-y-2">
-        <div className="h-5 w-32 animate-pulse rounded bg-white/10" />
-        <div className="h-4 w-24 animate-pulse rounded bg-white/10" />
-      </div>
-    </div>
-
-    {/* Price Skeleton */}
-    <div className="mb-4 space-y-2">
-      <div className="h-8 w-40 animate-pulse rounded bg-white/10" />
-    </div>
-
-    {/* Stats Skeleton */}
-    <div className="mt-auto space-y-2 border-t border-white/10 pt-4">
-      <div className="flex justify-between">
-        <div className="h-4 w-20 animate-pulse rounded bg-white/10" />
-        <div className="h-4 w-16 animate-pulse rounded bg-white/10" />
-      </div>
-      <div className="flex justify-between">
-        <div className="h-4 w-20 animate-pulse rounded bg-white/10" />
-        <div className="h-4 w-16 animate-pulse rounded bg-white/10" />
-      </div>
-      <div className="flex justify-between">
-        <div className="h-4 w-20 animate-pulse rounded bg-white/10" />
-        <div className="h-4 w-16 animate-pulse rounded bg-white/10" />
-      </div>
-    </div>
-  </div>
-);
 
 const renderEmptyItem = () => (
   <div className="flex h-64 items-center justify-center rounded-lg border border-white/10 bg-white/5">
@@ -185,7 +98,7 @@ export default function BasicCarouselExample() {
   // ==========================================================================
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 rounded-lg border-2 border-black/10 p-6">
       {/* Info Section */}
       <div className="rounded-lg bg-white/10 p-6">
         <h2 className="mb-2 text-xl font-semibold">Basic Carousel</h2>
@@ -208,19 +121,18 @@ export default function BasicCarouselExample() {
       {/* Carousel */}
       <Carousel<AssetDTO>
         items={assets}
-        renderItem={renderItem}
-        renderLoadingItem={renderLoadingItem}
+        renderItem={BasicCarouselItem}
+        renderLoadingItem={BasicCarouselItemLoading}
         renderEmptyItem={renderEmptyItem}
         isLoading={isLoading}
         containScroll="trimSnaps"
         loadingCount={3}
-        itemsPerView={3}
         gap={16}
         navigation={{ show: true }}
         dots={{ show: true }}
         loop
         dragFree
-        className="px-4"
+        className="rounded-lg border-2 border-black/10 p-4"
         itemClassName="h-80"
       />
 

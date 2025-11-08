@@ -121,8 +121,8 @@ export default function SandboxCarouselExample() {
       autoPlayStopOnMouseEnter: state.autoPlayStopOnMouseEnter,
       autoPlayResumeDelay: state.autoPlayResumeDelay,
       autoScroll: state.autoScroll,
+      autoScrollInterval: state.autoScrollInterval,
       autoScrollSpeed: state.autoScrollSpeed,
-      autoScrollLimit: state.autoScrollLimit,
       autoScrollStopOnMouseEnter: state.autoScrollStopOnMouseEnter,
       maxWidth: state.maxWidth,
       paddingY: state.paddingY,
@@ -174,8 +174,8 @@ export default function SandboxCarouselExample() {
               autoPlaySpeed={state.autoPlaySpeed}
               autoPlayStopOnMouseEnter={state.autoPlayStopOnMouseEnter}
               autoScroll={state.autoScroll}
+              autoScrollInterval={state.autoScrollInterval}
               autoScrollSpeed={state.autoScrollSpeed}
-              autoScrollLimit={state.autoScrollLimit}
               autoScrollStopOnMouseEnter={state.autoScrollStopOnMouseEnter}
               onItemsPerViewChange={state.setItemsPerView}
               onGapChange={state.setGap}
@@ -193,8 +193,8 @@ export default function SandboxCarouselExample() {
                 state.setAutoPlayStopOnMouseEnter
               }
               onAutoScrollChange={state.setAutoScroll}
+              onAutoScrollIntervalChange={state.setAutoScrollInterval}
               onAutoScrollSpeedChange={state.setAutoScrollSpeed}
-              onAutoScrollLimitChange={state.setAutoScrollLimit}
               onAutoScrollStopOnMouseEnterChange={
                 state.setAutoScrollStopOnMouseEnter
               }
@@ -279,8 +279,8 @@ export default function SandboxCarouselExample() {
               }}
               autoScroll={{
                 enabled: state.autoScroll,
+                interval: state.autoScrollInterval,
                 speed: state.autoScrollSpeed,
-                limit: state.autoScrollLimit,
                 stopOnInteraction: false,
                 stopOnMouseEnter: state.autoScrollStopOnMouseEnter,
               }}
@@ -364,8 +364,8 @@ export default function SandboxCarouselExample() {
                       autoPlayStopOnMouseEnter: state.autoPlayStopOnMouseEnter,
                       autoPlayResumeDelay: state.autoPlayResumeDelay,
                       autoScroll: state.autoScroll,
+                      autoScrollInterval: state.autoScrollInterval,
                       autoScrollSpeed: state.autoScrollSpeed,
-                      autoScrollLimit: state.autoScrollLimit,
                       autoScrollStopOnMouseEnter:
                         state.autoScrollStopOnMouseEnter,
                       maxWidth: state.maxWidth,

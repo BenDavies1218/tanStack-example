@@ -29,8 +29,8 @@ interface CarouselConfigPanelProps {
   autoPlaySpeed: number;
   autoPlayStopOnMouseEnter: boolean;
   autoScroll: boolean;
+  autoScrollInterval: number;
   autoScrollSpeed: number;
-  autoScrollLimit: number;
   autoScrollStopOnMouseEnter: boolean;
   onItemsPerViewChange: (value: number) => void;
   onGapChange: (value: number) => void;
@@ -46,8 +46,8 @@ interface CarouselConfigPanelProps {
   onAutoPlaySpeedChange: (value: number) => void;
   onAutoPlayStopOnMouseEnterChange: (value: boolean) => void;
   onAutoScrollChange: (value: boolean) => void;
+  onAutoScrollIntervalChange: (value: number) => void;
   onAutoScrollSpeedChange: (value: number) => void;
-  onAutoScrollLimitChange: (value: number) => void;
   onAutoScrollStopOnMouseEnterChange: (value: boolean) => void;
   onRefetch: () => void;
 }
@@ -67,8 +67,8 @@ export function CarouselConfigPanel({
   autoPlaySpeed,
   autoPlayStopOnMouseEnter,
   autoScroll,
+  autoScrollInterval,
   autoScrollSpeed,
-  autoScrollLimit,
   autoScrollStopOnMouseEnter,
   onItemsPerViewChange,
   onGapChange,
@@ -84,8 +84,8 @@ export function CarouselConfigPanel({
   onAutoPlaySpeedChange,
   onAutoPlayStopOnMouseEnterChange,
   onAutoScrollChange,
+  onAutoScrollIntervalChange,
   onAutoScrollSpeedChange,
-  onAutoScrollLimitChange,
   onAutoScrollStopOnMouseEnterChange,
   onRefetch,
 }: CarouselConfigPanelProps) {
@@ -290,7 +290,22 @@ export function CarouselConfigPanel({
             <div className="space-y-2 border-t border-white/5 pt-2">
               <div className="space-y-1">
                 <Label className="text-[10px] text-gray-400">
-                  Speed: {autoScrollSpeed.toFixed(2)}x
+                  Interval: {(autoScrollInterval / 1000).toFixed(1)}s
+                </Label>
+                <Slider
+                  value={[autoScrollInterval]}
+                  onValueChange={(value) => {
+                    const val = value[0];
+                    if (val !== undefined) onAutoScrollIntervalChange(val);
+                  }}
+                  min={1000}
+                  max={10000}
+                  step={1000}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-[10px] text-gray-400">
+                  Speed: {autoScrollSpeed}ms
                 </Label>
                 <Slider
                   value={[autoScrollSpeed]}
@@ -298,24 +313,9 @@ export function CarouselConfigPanel({
                     const val = value[0];
                     if (val !== undefined) onAutoScrollSpeedChange(val);
                   }}
-                  min={0.1}
-                  max={1}
-                  step={0.1}
-                />
-              </div>
-              <div className="space-y-1">
-                <Label className="text-[10px] text-gray-400">
-                  Interval: {autoScrollLimit}s
-                </Label>
-                <Slider
-                  value={[autoScrollLimit]}
-                  onValueChange={(value) => {
-                    const val = value[0];
-                    if (val !== undefined) onAutoScrollLimitChange(val);
-                  }}
-                  min={1}
-                  max={10}
-                  step={1}
+                  min={100}
+                  max={1000}
+                  step={100}
                 />
               </div>
               <div className="flex items-center justify-between">
